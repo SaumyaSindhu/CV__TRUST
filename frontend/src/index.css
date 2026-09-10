@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — dark is the default theme (matches the reference).
+ * Light values are overridden on <html class="light"> further down, so
+ * every Tailwind utility built from these tokens re-themes for free.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #0a0a0b;
+  --color-panel: #121214;
+  --color-panel2: #1a1a1d;
+  --color-line: #27272a;
+  --color-ink: #d4d4d8;
+  --color-muted: #71717a;
+  --color-head: #fafafa;
+
+  --color-ok: #22c55e;
+  --color-warn: #f59e0b;
+  --color-bad: #ef4444;
+  --color-info: #60a5fa;
+  --color-accent: #f97316;
+  --color-accent2: #fdba74;
+
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+html.light {
+  --color-bg: #e9e9ec;
+  --color-panel: #ffffff;
+  --color-panel2: #f4f4f5;
+  --color-line: #e4e4e7;
+  --color-ink: #3f3f46;
+  --color-muted: #71717a;
+  --color-head: #09090b;
+
+  --color-ok: #16a34a;
+  --color-warn: #d97706;
+  --color-bad: #dc2626;
+  --color-info: #2563eb;
+  --color-accent: #ea580c;
+  --color-accent2: #9a3412;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04";
+  /* the reference's dotted backdrop behind the rounded app frame */
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+}
+
+html.light body {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(0, 0, 0, 0.07) 1px,
+    transparent 0
+  );
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ------------------------------------------------------------------ *
+ * Component utilities
+ * ------------------------------------------------------------------ */
+.panel {
+  @apply rounded-2xl border border-line bg-panel;
+}
+
+.panel-title {
+  @apply text-[13px] font-medium text-head;
+}
+
+.subtle {
+  @apply text-[11px] text-muted;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* soft orange bloom used under the signal chart, exactly as in the
+   reference screenshot */
+.glow-accent {
+  background: radial-gradient(
+    58% 92% at 44% 108%,
+    color-mix(in srgb, var(--color-accent) 30%, transparent),
+    transparent 70%
+  );
+}
+
+.ring-soft {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+html.light .ring-soft {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion — one entrance pass, and only user-triggered transitions
+ * elsewhere. Fully disabled under reduced-motion.
+ * ------------------------------------------------------------------ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fadeUp 0.32s ease both;
+}
+.fade-up-1 {
+  animation: fadeUp 0.32s ease 0.05s both;
+}
+.fade-up-2 {
+  animation: fadeUp 0.32s ease 0.1s both;
+}
+.fade-up-3 {
+  animation: fadeUp 0.32s ease 0.15s both;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-ok) 50%, transparent);
+  }
+  60% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+.live-dot {
+  animation: pulseDot 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .fade-up-1,
+  .fade-up-2,
+  .fade-up-3,
+  .live-dot {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
